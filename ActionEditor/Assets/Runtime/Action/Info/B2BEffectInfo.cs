@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace Action
 {
+    [ProtoContract]
     public class B2BEffectInfo : ActionInfo
     {
         // <-----> 依赖 <----->
@@ -16,18 +17,25 @@ namespace Action
         [ProtoMember(3)]
         public int effectId = 0;                                // 特效id
 
+        [ProtoMember(4)]
         public Vector3 scale = Vector3.one;                     // 特效缩放
 
+        [ProtoMember(5)]
         public Vector3 fromOffset = Vector3.zero;               // 起点偏移(相对于起点-->终点向量，如果为向量为zero，则相对于起点forward)
 
+        [ProtoMember(6)]
         public Vector3 toOffset = Vector3.zero;                 // 终点偏移(相对于起点-->终点向量，如果为向量为zero，则相对于起点forward)
 
+        [ProtoMember(7)]
         public AnimationCurve xCurve;                           // x偏移曲线(time:0-->1, value真实值)
 
+        [ProtoMember(8)]
         public AnimationCurve yCurve;                           // y偏移曲线(time:0-->1, value真实值)
 
+        [ProtoMember(9)]
         public AnimationCurve zCurve;                           // z偏移曲线(time:0-->1, value真实值)
 
+        [ProtoMember(10)]
         public float flySpeed = 4f;                             // 飞行速度(m/s)
 
         public override ActionType type
