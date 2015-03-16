@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace Core
 {
@@ -15,6 +16,10 @@ namespace Core
         private float _speed;
 
         private float _progress;
+
+        private Vector3 _scale;
+
+        private Dictionary<GameObject, Vector3> _scaleRecorder;
 
         private int _frame;
 
@@ -125,7 +130,23 @@ namespace Core
             }
         }
 
-        protected virtual void UpdateState()
+        public Vector3 scale
+        {
+            get
+            {
+                return _scale;
+            }
+            set
+            {
+                if (!_scale.Equals(value))
+                {
+                    _scale = value;
+                    UpdateScale();
+                }
+            }
+        }
+
+        private void UpdateState()
         {
             switch (state)
             {
@@ -149,7 +170,7 @@ namespace Core
             }
         }
 
-        protected virtual void Play()
+        private void Play()
         {
             foreach (ParticleSystem particle in _particles)
             {
@@ -174,7 +195,7 @@ namespace Core
             }
         }
 
-        protected virtual void Pause()
+        private void Pause()
         {
             foreach (ParticleSystem particle in _particles)
             {
@@ -199,7 +220,7 @@ namespace Core
             }
         }
 
-        protected virtual void Stop()
+        private void Stop()
         {
             foreach (ParticleSystem particle in _particles)
             {
@@ -231,7 +252,7 @@ namespace Core
             _frame = 0;
         }
 
-        protected virtual void UpdateSpeed()
+        private void UpdateSpeed()
         {
             foreach (ParticleSystem particle in _particles)
             {
@@ -249,11 +270,31 @@ namespace Core
             }
         }
 
-        protected virtual void UpdateProgress()
+        private void UpdateProgress()
         {
             if (progress >= 1)
             {
                 state = RadioState.Stop;
+            }
+        }
+
+        private void UpdateScale()
+        {
+            ParticleSystem[] particles = GetComponentsInChildren<ParticleSystem>(true);
+            if (_scaleRecorder == null)
+            {
+                _scaleRecorder = new Dictionary<GameObject, Vector3>();
+                _scaleRecorder[gameObject] = gameObject.transform.localScale;
+                foreach (ParticleSystem particle in particles)
+                {
+                    _scaleRecorder[particle.gameObject] = new Vector3(particle.startSize, particle.startSize, particle.startSize);
+                }
+            }
+            gameObject.transform.localScale = Vector3.Scale(_scaleRecorder[gameObject], scale);
+            foreach (ParticleSystem particle in particles)
+            {
+                Vector3 particleScale = Vector3.Scale(_scaleRecorder[particle.gameObject], scale);
+                particle.startSize = (particleScale.x + particleScale.y + particleScale.z) / 3;
             }
         }
     }
