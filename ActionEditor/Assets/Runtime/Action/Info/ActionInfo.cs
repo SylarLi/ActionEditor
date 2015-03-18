@@ -247,5 +247,50 @@ namespace Action
             _progress = 0;
             _ready = false;
         }
+
+        public static void UpdateReadyRecursion(IActionInfo actionInfo, bool ready)
+        {
+            actionInfo.ready = ready;
+            foreach (IActionInfo childInfo in actionInfo.Values)
+            {
+                UpdateReadyRecursion(childInfo, ready);
+            }
+        }
+
+        public static void UpdateStateRecursion(IActionInfo actionInfo, ActionState state)
+        {
+            actionInfo.state = state;
+            foreach (IActionInfo childInfo in actionInfo.Values)
+            {
+                UpdateStateRecursion(childInfo, state);
+            }
+        }
+
+        public static void UpdatePauseRecursion(IActionInfo actionInfo, bool paused)
+        {
+            actionInfo.paused = paused;
+            foreach (IActionInfo childInfo in actionInfo.Values)
+            {
+                UpdatePauseRecursion(childInfo, paused);
+            }
+        }
+
+        public static void UpdateSpeedRecursion(IActionInfo actionInfo, float speed)
+        {
+            actionInfo.speed = speed;
+            foreach (IActionInfo childInfo in actionInfo.Values)
+            {
+                UpdateSpeedRecursion(childInfo, speed);
+            }
+        }
+
+        public static void DisposeRecursion(IActionInfo actionInfo)
+        {
+            actionInfo.Dispose();
+            foreach (IActionInfo childInfo in actionInfo.Values)
+            {
+                DisposeRecursion(childInfo);
+            }
+        }
     }
 }

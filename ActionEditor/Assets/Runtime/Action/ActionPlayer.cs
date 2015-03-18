@@ -14,12 +14,20 @@
 
         public IActionInfo Build(IDependInfo dependInfo, string raw)
         {
-            throw new System.NotImplementedException();
+            RootActionInfo rootInfo = new RootActionInfo(_pool.GetActionInfo(raw), dependInfo);
+            RootAction rootAction = new RootAction(rootInfo);
+            rootAction.setting = _setting;
+            rootAction.Load();
+            return rootInfo;
         }
 
         public IActionInfo Build(IDependInfo dependInfo, IActionInfo actionInfo)
         {
-            throw new System.NotImplementedException();
+            RootActionInfo rootInfo = new RootActionInfo(actionInfo, dependInfo);
+            RootAction rootAction = new RootAction(rootInfo);
+            rootAction.setting = _setting;
+            rootAction.Load();
+            return rootInfo;
         }
     }
 }

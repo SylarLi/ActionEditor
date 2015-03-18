@@ -31,7 +31,7 @@ namespace Action
             }
         }
 
-        public int actorLimit
+        public virtual int actorLimit
         {
             get
             {
@@ -39,7 +39,7 @@ namespace Action
             }
         }
 
-        public int pointLimit
+        public virtual int pointLimit
         {
             get
             {
