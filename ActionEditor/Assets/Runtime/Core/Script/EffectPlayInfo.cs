@@ -39,7 +39,8 @@ namespace Core
             _particles = GetComponentsInChildren<ParticleSystem>();
             _animators = GetComponentsInChildren<Animator>();
             _trails = GetComponentsInChildren<TrailRenderer>();
-
+            UpdateSpeed();
+            UpdateScale();
             state = RadioState.Stop;
         }
 
