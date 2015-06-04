@@ -25,6 +25,7 @@ namespace Action
 
         void Update()
         {
+            // 这儿对循环特效的时间计算有问题
             if (duration > 0)
             {
                 normalizedTime = effectPlayInfo.progress * effectPlayInfo.duration / duration;
