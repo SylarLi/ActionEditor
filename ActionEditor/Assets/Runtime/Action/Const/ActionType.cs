@@ -8,6 +8,6 @@
         BodyEffect,
         B2BEffect,
         Sound,
-        Uterus
+        Uterus,
     }
 }

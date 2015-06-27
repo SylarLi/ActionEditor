@@ -12,9 +12,9 @@ namespace Local
 {
     public enum StorageStatus
     {
-        IDLE,       // 闲置中
-        LOADING,    // 加载中
-        SAVING,     // 保存中
+        Idle,       // 闲置中
+        Loading,    // 加载中
+        Saving,     // 保存中
     }
 
     /// <summary>
@@ -75,7 +75,7 @@ namespace Local
         /// <summary>
         /// 本地存储当前状态
         /// </summary>
-        private StorageStatus _status = StorageStatus.IDLE;
+        private StorageStatus _status = StorageStatus.Idle;
 
         private StreamReader _reader;
         private StreamWriter _writer;
@@ -95,7 +95,7 @@ namespace Local
         /// <param name="uniqueId">一个uniqueId代表一个独立的存储文件</param>
         public void TryLoadAsync(long uniqueId)
         {
-            if (status == StorageStatus.IDLE)
+            if (status == StorageStatus.Idle)
             {
 #if UNITY_WEBPLAYER
                 Debug.LogError("Local data storage is not supported on web player");
@@ -109,7 +109,7 @@ namespace Local
                     {
                         _reader = new StreamReader(filePath);
                         _isLoaded = false;
-                        status = StorageStatus.LOADING;
+                        status = StorageStatus.Loading;
                     }
                     catch (Exception e)
                     {
@@ -172,7 +172,7 @@ namespace Local
                     {
                         _reader = null;
                         _isLoaded = true;
-                        status = StorageStatus.IDLE;
+                        status = StorageStatus.Idle;
                         Debug.Log("Local data storage load complete");
                     }
                 }
@@ -206,7 +206,7 @@ namespace Local
                     finally
                     {
                         _writer = null;
-                        status = StorageStatus.IDLE;
+                        status = StorageStatus.Idle;
                         Debug.Log("Local data storage save compelte");
                     }
                 }
@@ -227,11 +227,11 @@ namespace Local
                 Debug.LogError("Local data storage is not supported on web player");
                 return;
 #endif
-            if (status == StorageStatus.LOADING)
+            if (status == StorageStatus.Loading)
             {
                 Debug.LogWarning("File Loading, flush operation will be expired");
             }
-            else if (status == StorageStatus.SAVING)
+            else if (status == StorageStatus.Saving)
             {
                 if (_writer != null)
                 {
@@ -259,7 +259,7 @@ namespace Local
                     finally
                     {
                         _writer = null;
-                        status = StorageStatus.IDLE;
+                        status = StorageStatus.Idle;
                         Debug.Log("Local data storage save complete");
                     }
                 }
@@ -298,14 +298,14 @@ namespace Local
                 Debug.LogError("Local data storage is not supported on web player");
                 return;
 #endif
-            if (status == StorageStatus.IDLE && _flushTimeStamp < _modifyTimeStamp)
+            if (status == StorageStatus.Idle && _flushTimeStamp < _modifyTimeStamp)
             {
                 FlushTemp();
                 Debug.Log("Attemp to save file: " + filePath);
                 try
                 {
                     _writer = new StreamWriter(File.Open(filePath, FileMode.OpenOrCreate));
-                    status = StorageStatus.SAVING;
+                    status = StorageStatus.Saving;
                 }
                 catch (Exception e)
                 {
@@ -521,11 +521,11 @@ namespace Local
                 if (_status != value)
                 {
                     LocalDataEvent evt = null;
-                    if (_status == StorageStatus.LOADING)
+                    if (_status == StorageStatus.Loading)
                     {
                         evt = new LocalDataEvent(LocalDataEvent.LOAD_COMPLETE);
                     }
-                    else if (_status == StorageStatus.SAVING)
+                    else if (_status == StorageStatus.Saving)
                     {
                         evt = new LocalDataEvent(LocalDataEvent.SAVE_COMPLETE);
                     }
