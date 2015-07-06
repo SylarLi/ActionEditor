@@ -1,5 +1,6 @@
 ﻿using Core;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -67,6 +68,7 @@ public class TemplateParser : MonoBehaviour, IEventDispatcher
 
     /// <summary>
     /// 同步解析表结构
+    /// (HM1S解析100000行8列需要3.7s左右)
     /// </summary>
     /// <param name="pTemplateConfig"></param>
     /// <param name="pSource"></param>
@@ -95,16 +97,42 @@ public class TemplateParser : MonoBehaviour, IEventDispatcher
 
     /// <summary>
     /// 异步解析表结构
+    /// (每物理帧400条，HM1S解析100000行8列需要4s左右)
     /// </summary>
     /// <param name="pTemplateConfig"></param>
     /// <param name="pSource"></param>
     /// <param name="pFrameLimit">每物理帧处理的最大配置条数</param>
-    public void ParseAsync(TemplateConfig pTemplateConfig, Stream pSource, int pFrameLimit = 2000)
+    public void ParseAsync(TemplateConfig pTemplateConfig, Stream pSource, int pFrameLimit = 400)
     {
         state = TemplateParseState.Parsing;
         templateConfig = pTemplateConfig;
         reader = new BinaryReader(pSource, Encode);
         frameLimit = pFrameLimit;
+    }
+
+    /// <summary>
+    /// 协程解析表结构
+    /// (每次循环400条，HM1S解析100000行8列需要4s左右)
+    /// </summary>
+    /// <param name="pTemplateConfig"></param>
+    /// <param name="pSource"></param>
+    /// <param name="pFrameLimit">协程每个循环处理的最大数量</param>
+    public void ParseByCoroutine(TemplateConfig pTemplateConfig, Stream pSource, int pFrameLimit = 400)
+    {
+        state = TemplateParseState.Parsing;
+        templateConfig = pTemplateConfig;
+        reader = new BinaryReader(pSource, Encode);
+        frameLimit = pFrameLimit;
+        StartCoroutine(ParseCoroutine());
+    }
+
+    private IEnumerator ParseCoroutine()
+    {
+        while (state == TemplateParseState.Parsing)
+        {
+            FixedUpdate();
+            yield return new WaitForEndOfFrame();
+        }
     }
 
     private void FixedUpdate()

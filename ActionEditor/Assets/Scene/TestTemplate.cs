@@ -9,7 +9,7 @@ public class TestTemplate : MonoBehaviour
 
     private string randomText = "";
 
-    private int frameLength = 2000;
+    private int frameLength = 400;
 
     private void Update()
     {
@@ -39,7 +39,7 @@ public class TestTemplate : MonoBehaviour
         stream.Position = 0;
         stream.Flush();
 #else
-        string configTo = Application.dataPath + "/StreamingAssets/data";
+        string configTo = Application.dataPath + "/StreamingAssets/data.txt";
         FileStream stream = File.Open(configTo, FileMode.Open, FileAccess.Read);
 #endif
         TemplateConfig templateConfig = new TemplateConfig();
@@ -88,7 +88,7 @@ public class TestTemplate : MonoBehaviour
             stream.Position = 0;
             stream.Flush();
 #else
-            string configTo = Application.dataPath + "/StreamingAssets/data";
+            string configTo = Application.dataPath + "/StreamingAssets/data.txt";
             FileStream stream = File.Open(configTo, FileMode.Open, FileAccess.Read);
 #endif
             TemplateConfig templateConfig = new TemplateConfig();
